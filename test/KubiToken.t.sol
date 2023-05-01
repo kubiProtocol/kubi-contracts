@@ -33,6 +33,22 @@ contract KubiTokenTest is Test {
         kubi.mintTokens();
         uint256 actualBalance = kubi.balanceOf(alice);
         assertEq(actualBalance, 10, "Balance of owner is incorrect");
+        uint256 actualSupply = kubi.totalSupply();
+        assertEq(actualSupply, 10, "Total supply is incorrect");
+        //try minting again should not work
+        vm.prank(alice, alice);
+        vm.expectRevert("KubiToken: insufficient balance in other contract");
+        kubi.mintTokens();
+
+        for (uint256 i = 0; i < 100; i++) {
+            counter.increment();
+        }
+        vm.prank(alice, alice);
+        kubi.mintTokens();
+        uint256 actualBalance2 = kubi.balanceOf(alice);
+        assertEq(actualBalance2, 20, "Balance of owner is incorrect");
+        uint256 actualSupply2 = kubi.totalSupply();
+        assertEq(actualSupply2, 20, "Total supply is incorrect");
     }
 
     // function testTransfer() public {
